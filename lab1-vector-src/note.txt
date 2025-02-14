@@ -1,0 +1,24 @@
+main.cpp 主要负责读取输入数据文件，构建 MyTree 树结构，并加载查询请求，同时使用多线程执行查询任务。它不包含树的实现细节，而是调用 tree.h 和 tree.cpp 中定义的 MyTree 类的方法来进行操作。
+
+tree.cpp 负责具体的数据结构和算法实现，包括：
+
+MyTree::MyNode 结构：用于存储键值数据，包括 key 和 val（一个 uint32_t 数组）。
+MyTree::Insert 方法：将 MyNode 插入到二叉搜索树中，按照 key 进行排序。
+MyTree::Find 方法：查找指定 key 的节点。
+MyTree::Next 方法：用于查找当前节点的下一个节点（中序遍历的下一个）。
+MyTree::MyNode::Distance 方法：计算两个节点 val 数组的距离（逐元素相减求和）。
+traverse_queries 方法：执行查询，查找指定范围内 key 最接近的节点，并计算 val 的最小距离。此方法由 main.cpp 中的多线程并发调用。
+
+
+
+./obj/datagen 24 7
+This will generate two ﬁles: “bﬁle_24_64.dat” (database) and “qﬁle_24.dat” (query)
+Then you can run
+./obj/traverse ./bﬁle_24_64.dat 64 ./qﬁle_24.dat 8
+
+
+perf 观察 L1/L2/L3 缓存利用情况：
+sudo perf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-load-misses,L2_rqsts.all_demand_data_rd,L2_rqsts.miss,LLC-loads,LLC-load-misses -o ./perf_all_cache_result.txt ./obj/traverse ./bfile_24_64.dat 64 ./qfile_24.dat 8
+
+
+

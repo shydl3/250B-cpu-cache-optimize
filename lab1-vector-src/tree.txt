@@ -1,0 +1,120 @@
+#include "tree.h"
+
+// 构造函数：创建 MyNode 节点，并分配存储空间存储 val
+MyTree::MyNode::MyNode(uint64_t key, void* val, size_t valbytes) {
+    this->key = key;  // 设置节点 key
+    this->val = malloc(valbytes);  // 分配 valbytes 大小的内存空间
+    memcpy(this->val, val, valbytes);  // 复制数据到 val
+    this->parent = NULL;
+    this->right = NULL;
+    this->left = NULL;
+    this->valcnt = valbytes / sizeof(uint32_t);  // 计算 value 数组的元素个数
+}
+
+// 计算两个节点的数值数组的距离（逐元素相减求和）
+uint32_t MyTree::MyNode::Distance(MyTree::MyNode* node) {
+    uint32_t dist = 0;
+    uint32_t* arr1 = (uint32_t*)this->val;
+    uint32_t* arr2 = (uint32_t*)node->val;
+    for (size_t i = 0; i < this->valcnt; i++) {
+        uint32_t d = (arr1[i] > arr2[i]) ? (arr1[i] - arr2[i]) : (arr2[i] - arr1[i]);
+        dist += d;
+    }
+    return dist;
+}
+
+// MyTree 构造函数：初始化空树
+MyTree::MyTree() {
+    root = NULL;
+}
+
+// 插入新节点到二叉搜索树
+void MyTree::Insert(MyNode* node) {
+    if (root == NULL) {
+        root = node;  // 如果根为空，则直接设为根节点
+        return;
+    }
+
+    MyNode* curpointer = root;
+    bool done = false;
+    while (!done) {
+        if (node->key >= curpointer->key) {  // 如果 key 大于当前节点，则进入右子树
+            if (curpointer->right == NULL) {
+                curpointer->right = node;
+                node->parent = curpointer;
+                done = true;
+            } else {
+                curpointer = curpointer->right;
+            }
+        } else {  // 否则进入左子树
+            if (curpointer->left == NULL) {
+                curpointer->left = node;
+                node->parent = curpointer;
+                done = true;
+            } else {
+                curpointer = curpointer->left;
+            }
+        }
+    }
+}
+
+// 在树中查找具有指定 key 的节点
+MyTree::MyNode* MyTree::Find(uint64_t key) {
+    MyNode* curpointer = root;
+    while (curpointer != NULL) {
+        if (key == curpointer->key) {  // 找到匹配 key 的节点
+            if (curpointer->left != NULL && curpointer->left->key == key) {
+                curpointer = curpointer->left;  // 处理重复 key 的情况
+            } else {
+                return curpointer;
+            }
+        } else if (key > curpointer->key) {  // key 大于当前节点，进入右子树
+            curpointer = curpointer->right;
+        } else {  // key 小于当前节点，进入左子树
+            curpointer = curpointer->left;
+        }
+    }
+    return NULL;  // 如果找不到 key，则返回 NULL
+}
+
+// 查找当前节点的中序遍历的下一个节点
+MyTree::MyNode* MyTree::Next(MyTree::MyNode* node) {
+    if (node->right != NULL) {
+        return node->right;  // 如果右子树存在，返回右子树的节点
+    }
+    
+    MyTree::MyNode* curpointer = node;
+    while (curpointer->parent != NULL) {
+        if (curpointer->parent->right == curpointer) {
+            curpointer = curpointer->parent;
+            continue;
+        }
+        curpointer = curpointer->parent;
+        break;
+    }
+    return curpointer;
+}
+
+// 多线程查询函数，每个线程处理部分查询
+void traverse_queries(MyTree* tree, std::vector<std::tuple<MyTree::MyNode*, uint64_t>> queries, int tid, int threadcnt, uint64_t* ret) {
+    uint64_t ans_sum = 0;
+    for (size_t i = tid; i < queries.size(); i += threadcnt) {  // 线程间轮流处理查询
+        std::tuple<MyTree::MyNode*, uint64_t> q = queries[i];
+        MyTree::MyNode* from = std::get<0>(q);
+        uint64_t to = std::get<1>(q);
+        
+        MyTree::MyNode* nn = tree->Find(from->key);  // 查找起点节点
+        if (nn != NULL) {
+            uint64_t min_dist = nn->Distance(from);  // 计算距离
+            
+            MyTree::MyNode* n = tree->Next(nn);
+            while (n != NULL && n->key <= to) {  // 遍历下一个节点
+                uint32_t ndist = n->Distance(from);
+                if (ndist < min_dist) min_dist = ndist;
+                n = tree->Next(n);
+            }
+            ans_sum += min_dist;  // 记录最小距离
+        }
+    }
+    *ret = ans_sum;  // 存储结果到线程共享变量
+}
