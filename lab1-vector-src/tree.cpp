@@ -173,7 +173,7 @@ void traverse_queries(BPlusTree* tree, std::vector<std::tuple<uint64_t, uint64_t
         }
         
         uint64_t min_dist = UINT32_MAX;
-        printf("Initial min_dist: %llu\n", (unsigned long long)min_dist);
+        // printf("Initial min_dist: %llu\n", (unsigned long long)min_dist);
         // exit(1);
 
         BPlusTree::Node* n = tree->Next(nn);
@@ -183,14 +183,14 @@ void traverse_queries(BPlusTree* tree, std::vector<std::tuple<uint64_t, uint64_t
 
             if (ndist < min_dist) {
                 min_dist = ndist;
-                printf("Updated min_dist: %llu\n", (unsigned long long)min_dist);
+                // printf("Updated min_dist: %llu\n", (unsigned long long)min_dist);
                 // exit(1);
             } else break;
 
             
-            printf("min_dist: %llu\n", (unsigned long long)min_dist);
-            printf("ndist: %lu\n", (uint64_t)ndist);
-            printf("==================\n");
+            // printf("min_dist: %llu\n", (unsigned long long)min_dist);
+            // printf("ndist: %lu\n", (uint64_t)ndist);
+            // printf("==================\n");
 
             n = tree->Next(n);
         }
