@@ -54,6 +54,7 @@ int main (int argc, char** argv) {
 		if ( rres != valcnt ) continue;
 
 		// 直接插入 B+树
+		// printf("Read key: %lu\n", key);
 		tree->Insert(key, valbuf, valcnt * sizeof(uint32_t));
 	}
 	

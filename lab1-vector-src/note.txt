@@ -14,8 +14,7 @@ traverse_queries 方法：执行查询，查找指定范围内 key 最接近的�
 ./obj/datagen 24 7
 This will generate two ﬁles: “bﬁle_24_64.dat” (database) and “qﬁle_24.dat” (query)
 Then you can run
-./obj/traverse ./bﬁle_24_64.dat 64 ./qﬁle_24.dat 8
-
+./obj/traverse ./bfile_24_64.dat 64 ./qfile_24.dat 8
 
 perf 观察 L1/L2/L3 缓存利用情况：
 sudo perf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-load-misses,L2_rqsts.all_demand_data_rd,L2_rqsts.miss,LLC-loads,LLC-load-misses -o ./perf_all_cache_result.txt ./obj/traverse ./bfile_24_64.dat 64 ./qfile_24.dat 8

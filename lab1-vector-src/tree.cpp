@@ -26,6 +26,9 @@ uint32_t BPlusTree::Node::Distance(Node* node) {
         uint32_t d = (arr1[i] > arr2[i]) ? (arr1[i] - arr2[i]) : (arr2[i] - arr1[i]);
         dist += d;
     }
+
+    // printf("Distance between nodes: %u\n", dist);
+
     return dist;
 }
 
@@ -164,14 +167,22 @@ void traverse_queries(BPlusTree* tree, std::vector<std::tuple<uint64_t, uint64_t
         auto [from, to] = queries[i];
 
         BPlusTree::Node* nn = tree->Find(from);
-        if (!nn) continue;
-
-        uint64_t min_dist = UINT32_MAX;
+        if (!nn) {
+            // printf("Thread %d: Key %lu not found in B+ tree!\n", tid, from);
+            continue;
+        }
+        
+        uint64_t min_dist = UINT64_MAX;
 
         BPlusTree::Node* n = nn;
         while (n && !n->keys.empty() && n->keys[0] <= to) {
             uint32_t ndist = n->Distance(nn);
             min_dist = std::min(min_dist, (uint64_t)ndist);
+
+            printf("min_dist: %llu\n", (unsigned long long)min_dist);
+            printf("ndist: %u\n", ndist);
+
+
             n = tree->Next(n);
         }
         ans_sum += min_dist;
