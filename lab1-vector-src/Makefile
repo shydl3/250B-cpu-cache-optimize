@@ -1,9 +1,19 @@
-.PHONY = main
-main:
-	mkdir -p obj
-	g++ -o obj/datagen datagen.cpp -Wall -pedantic -O2
-	g++ -o obj/traverse main.cpp tree.cpp -Wall -pedantic -O2 -lpthread
+.PHONY: all clean
+
+CXX = g++
+CXXFLAGS = -Wall -pedantic -O2 -mavx2 -lpthread
+OBJDIR = obj
+
+all: $(OBJDIR)/datagen $(OBJDIR)/traverse
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/datagen: datagen.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -o $@ datagen.cpp
+
+$(OBJDIR)/traverse: main.cpp tree.cpp | $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -o $@ main.cpp tree.cpp
 
 clean:
-	rm -r ./obj
-
+	rm -rf $(OBJDIR)

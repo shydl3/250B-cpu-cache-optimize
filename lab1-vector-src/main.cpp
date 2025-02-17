@@ -72,12 +72,25 @@ int main (int argc, char** argv) {
 		if ( rres != 1 ) continue;
 		rres = fread(&to, sizeof(uint64_t), 1, finq);
 		if ( rres != 1 ) continue;
+		
+		// control exactly 4194304 times of queries by doubling reading of valbuf
+		rres = fread(valbuf, sizeof(uint32_t), valcnt, finq);
+		if (rres == valcnt) {  
+			// 只有成功读取完整的 valbuf 才存储查询
+			// control the queries to 4194304
+			queries.push_back({from, to});
+		}
 
-		queries.push_back({from, to});
 	}
 
 	printf( "Finished reading the query file. %ld requests.\n", queries.size() );
 	fflush(stdout);
+
+	// check the queries details
+	for (size_t i = 0; i < 10; i++) {
+		printf("Query %ld: from = %lu, to = %lu\n", i, std::get<0>(queries[i]), std::get<1>(queries[i]));
+	}
+	exit(0);
 
 	uint64_t ans_sum = 0;
 	std::vector<std::thread*> threads;
@@ -94,6 +107,7 @@ int main (int argc, char** argv) {
 	for ( int i = 0; i < thread_cnt; i++ ) {
 		threads[i]->join();
 		ans_sum += return_cnts[i];
+		printf( "%lx\n", return_cnts[i] );
 		delete threads[i];
 	}
 

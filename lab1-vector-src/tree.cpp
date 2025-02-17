@@ -1,6 +1,7 @@
 #include "tree.h"
 #include <algorithm>  // for std::lower_bound
 #include <cstring>    // for memcpy
+#include <immintrin.h> // for the AVX2
 
 #define BPT_ORDER 4  // B+树的阶数（最大子节点数）
 
@@ -31,6 +32,50 @@ uint32_t BPlusTree::Node::Distance(Node* node) {
 
     return dist;
 }
+
+
+// AVX2 计算叶子节点间的距离
+// uint32_t BPlusTree::Node::Distance(Node* node) {
+//     if (this->values.empty() || node->values.empty()) {
+//         return UINT32_MAX;  // 无数据时返回最大距离
+//     }
+
+//     uint32_t dist = 0;
+//     uint32_t* arr1 = (uint32_t*)this->values[0];  // 取第一个值进行比较
+//     uint32_t* arr2 = (uint32_t*)node->values[0];
+
+//     size_t valcnt = std::min(this->values.size(), node->values.size());
+//     size_t i = 0;
+
+//     __m256i sumVec = _mm256_setzero_si256();  // 初始化累加向量
+
+//     // 以 8 个 uint32_t 为一组进行 AVX2 计算
+//     for (; i + 8 <= valcnt; i += 8) {
+//         __m256i v1 = _mm256_loadu_si256((__m256i*)(arr1 + i));
+//         __m256i v2 = _mm256_loadu_si256((__m256i*)(arr2 + i));
+//         __m256i diff = _mm256_sub_epi32(_mm256_max_epu32(v1, v2), _mm256_min_epu32(v1, v2));
+//         sumVec = _mm256_add_epi32(sumVec, diff);
+//     }
+
+//     // 累加 AVX2 计算的结果
+//     alignas(32) uint32_t temp[8];
+//     _mm256_store_si256((__m256i*)temp, sumVec);
+//     for (int j = 0; j < 8; ++j) {
+//         dist += temp[j];
+//     }
+
+//     // 处理剩余的部分（不足 8 的部分）
+//     for (; i < valcnt; i++) {
+//         uint32_t d = (arr1[i] > arr2[i]) ? (arr1[i] - arr2[i]) : (arr2[i] - arr1[i]);
+//         dist += d;
+//     }
+
+//     return dist;
+// }
+
+
+
+
 
 // B+树构造函数
 BPlusTree::BPlusTree() {
