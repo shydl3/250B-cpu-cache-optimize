@@ -1,0 +1,32 @@
+# started on Sat Feb 15 02:19:22 2025
+
+
+ Performance counter stats for './obj/traverse ./bfile_24_64.dat 64 ./qfile_24.dat 8':
+
+     5,695,532,059      cache-references                                                        (41.69%)
+     2,944,903,905      cache-misses                     #   51.71% of all cache refs           (50.02%)
+    32,491,581,249      cpu_atom/L1-dcache-loads/                                               (50.02%)
+    32,496,560,697      cpu_core/L1-dcache-loads/                                               (50.02%)
+     2,276,661,037      cpu_atom/L1-dcache-load-misses/  #    7.01% of all L1-dcache accesses   (50.02%)
+     2,277,506,702      cpu_core/L1-dcache-load-misses/  #    7.01% of all L1-dcache accesses   (50.02%)
+     2,278,807,308      cpu_core/L2_rqsts.all_demand_data_rd/                                        (33.34%)
+     6,093,505,804      cpu_core/L2_rqsts.miss/                                                 (33.33%)
+     1,234,496,158      cpu_atom/LLC-loads/                                                     (33.34%)
+     1,234,159,993      cpu_core/LLC-loads/                                                     (33.34%)
+       579,557,881      cpu_atom/LLC-load-misses/        #   46.95% of all LL-cache accesses    (33.35%)
+       579,377,165      cpu_core/LLC-load-misses/        #   46.95% of all LL-cache accesses    (33.35%)
+
+      30.298666497 seconds time elapsed
+
+      36.552708000 seconds user
+       4.444748000 seconds sys
+
+
+ubuntu@ubuntu-ROG-Strix-G614JV-G614JV:~/Desktop/250B-cpu-cache-optimize-main/lab1-vector-src$ sudo perf stat -e cache-references,cache-misses,L1-dcache-loads,L1-dcache-load-misses,L2_rqsts.all_demand_data_rd,L2_rqsts.miss,LLC-loads,LLC-load-misses -o ./perf_all_cache_result.txt ./obj/traverse ./bfile_24_64.dat 64 ./qfile_24.dat 8
+[sudo] password for ubuntu: 
+Done inserting all data. Elapsed 24.91s
+Finished reading the query file. 71303168 requests.
+Answer_sum: 64495259345359
+Done querying. Elapsed 3.500428s
+
+
