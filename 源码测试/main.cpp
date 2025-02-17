@@ -66,7 +66,7 @@ int main (int argc, char** argv) {
 	size_t i = 0;
 	
 	while( !feof(finq) ) {
-		while (i < 10) {
+//		while (i < 10) {
 			uint64_t from, to;
 			size_t rres = fread(&from, sizeof(uint64_t), 1, finq);
 			if ( rres != 1 ) continue;
@@ -77,19 +77,22 @@ int main (int argc, char** argv) {
 			MyTree::MyNode* nn = new MyTree::MyNode(from, valbuf, valcnt*sizeof(uint32_t));
 			queries.push_back({nn,to});
 			
-			printf("from = %lu, to = %lu\n", nn->key, to);
-			i ++;
-			}
+			//printf("from = %lu, to = %lu\n", nn->key, to);
+			//i ++;
+//			}
+
 	}
 	
 	printf( "Finished reading the query file. %ld requests.\n", queries.size() );
 	fflush(stdout);
 	
 	// check the queries 
-	//for (size_t i = 0; i < 10; i++) {
-	//	printf("Query %ld: from = %lu, to = %lu\n", i, std::get<0>(queries[i]), std::get<1>(queries[i]));
-	//}
-	//exit(0);
+	for (size_t i = 0; i < 10; i++) {
+		//printf("Query %ld: from = %lu, to = %lu\n", i, std::get<0>(queries[i]), std::get<1>(queries[i]));
+		printf("Query %ld: from = %lu, to = %lu\n", i, std::get<0>(queries[i])->key, std::get<1>(queries[i]));
+
+	}
+	exit(0);
 
 	uint64_t ans_sum = 0;;
 	std::vector<std::thread*> threads;
