@@ -15,8 +15,8 @@ uint32_t MyTree::MyNode::Distance(MyTree::MyNode* node) {
 	uint32_t* arr1 = (uint32_t*)this->val;
 	uint32_t* arr2 = (uint32_t*)node->val;
 	
-	printf("valcnt (this->valcnt): %lu\n", this->valcnt);
-	exit(0);
+	//printf("valcnt (this->valcnt): %lu\n", this->valcnt);
+	//exit(0);
 
 	
 	for ( size_t i = 0; i < this->valcnt; i++ ) {
