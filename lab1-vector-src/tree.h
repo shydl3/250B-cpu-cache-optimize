@@ -9,7 +9,7 @@
 #include <tuple>
 #include <thread>
 
-#define BPT_ORDER 4  // B+树阶数（每个节点最大子节点数）
+#define BPT_ORDER 8  // B+树阶数（每个节点最大子节点数）
 
 class BPlusTree {
 public:

@@ -86,7 +86,7 @@ int main (int argc, char** argv) {
 	printf( "Finished reading the query file. %ld requests.\n", queries.size() );
 	fflush(stdout);
 
-	// check the queries details
+	//check the queries details
 	// for (size_t i = 0; i < 10; i++) {
 	// 	printf("Query %ld: from = %lu, to = %lu\n", i, std::get<0>(queries[i]), std::get<1>(queries[i]));
 	// }

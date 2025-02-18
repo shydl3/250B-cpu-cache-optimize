@@ -2,8 +2,9 @@
 #include <algorithm>  // for std::lower_bound
 #include <cstring>    // for memcpy
 #include <immintrin.h> // for the AVX2
+#include <iostream>
 
-#define BPT_ORDER 4  // B+树的阶数（最大子节点数）
+#define BPT_ORDER 8  // B+树的阶数（最大子节点数）
 
 // 构造函数（叶子节点）
 BPlusTree::Node::Node(bool leaf) {
@@ -234,34 +235,59 @@ void traverse_queries(BPlusTree* tree, std::vector<std::tuple<uint64_t, uint64_t
         auto [from, to] = queries[i];
 
         BPlusTree::Node* nn = tree->Find(from);
+
+
+        // if (nn) {
+        // 	printf("\nfrom = %lu\n", from);
+
+        //     printf("Node Keys: ");
+        //     for (size_t i = 0; i < nn->keys.size(); i++) {
+        //         printf("%lu ", nn->keys[i]);
+        //     }
+
+        
+        //     printf("Node Values: ");
+        //     for (size_t i = 0; i < nn->values.size(); i++) {
+        //         uint32_t* val = (uint32_t*)nn->values[i];  // 假设 values 存的是 uint32_t 类型的数据
+        //         printf("%u ", *val);
+        //     }
+
+
+        //     printf("\n");
+        // } else {
+        //     printf("Node not found!\n");
+        // }
+        // exit(0);   
+
+
         if (!nn) {
             // printf("Thread %d: Key %lu not found in B+ tree!\n", tid, from);
             continue;
-        }
-        
-        uint64_t min_dist = UINT32_MAX;
-        // printf("Initial min_dist: %llu\n", (unsigned long long)min_dist);
-        // exit(1);
+        } else {
+                    
+            uint64_t min_dist = UINT32_MAX;
+            // printf("Initial min_dist: %llu\n", (unsigned long long)min_dist);
+            // exit(1);
 
-        BPlusTree::Node* n = tree->Next(nn);
-        while (n && !n->keys.empty() && n->keys[0] <= to) {
-            uint32_t ndist = n->Distance(nn);
-
-            if (ndist < min_dist) {
-                min_dist = ndist;
-                // printf("Updated min_dist: %llu\n", (unsigned long long)min_dist);
-                // exit(1);
-            } else break;
-
+            BPlusTree::Node* n = tree->Next(nn);
+            while (n) {
+                if (n->keys[0] <= to) {
+                    uint32_t ndist = n->Distance(nn);
+                    if (ndist < min_dist) {
+                        min_dist = ndist;
+                        // printf("Updated min_dist: %llu\n", (unsigned long long)min_dist);
+                        // exit(1);
+                    }
+                } else break;
+                n = tree->Next(n);
+            }
+            ans_sum += min_dist;
             
             // printf("min_dist: %llu\n", (unsigned long long)min_dist);
             // printf("ndist: %lu\n", (uint64_t)ndist);
             // printf("==================\n");
             // exit(0);
-
-            n = tree->Next(n);
         }
-        ans_sum += min_dist;
     }
     *ret = ans_sum;
 }
