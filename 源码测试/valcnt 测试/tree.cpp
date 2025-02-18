@@ -23,6 +23,10 @@ uint32_t MyTree::MyNode::Distance(MyTree::MyNode* node) {
 		uint32_t d = (arr1[i] > arr2[i]) ? (arr1[i] - arr2[i]) : (arr2[i] - arr1[i]);
 		dist += d;
 	}
+	
+	printf("Distance between nodes: %u\n", dist);
+	exit(0);
+	
 	return dist;
 }
 
@@ -115,6 +119,23 @@ void traverse_queries(MyTree* tree, std::vector<std::tuple<MyTree::MyNode*, uint
 
 
 		MyTree::MyNode* nn = tree->Find(from->key);
+		
+		/*
+		if (nn) {
+		    printf("\nfrom = %lu\n", from);
+		    uint32_t* valData = (uint32_t*)nn->val;
+		    printf("Values: ");
+		    for (size_t i = 0; i < nn->valcnt; i++) {
+			printf("%u ", valData[i]);
+		    }
+		    printf("\n");
+		} else {
+		    printf("Thread %d: Node not found!\n", tid);
+		}
+		exit(0);
+		*/
+
+		
 		if ( nn == NULL ) {
 			//printf( "Not found!\n" );
 		} else {
