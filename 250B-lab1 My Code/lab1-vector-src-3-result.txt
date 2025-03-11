@@ -1,0 +1,38 @@
+=======================================
+ RUNNING: ./obj/traverse ./bfile_24_64.dat 64 ./qfile_24.dat 8
+ Start time: 2025-02-27 12:42:09
+=======================================
+Done inserting all data. Elapsed 125.75s
+Finished reading the query file. 4194304 requests.
+Answer_sum: 2186337957927424
+Done querying. Elapsed 2467.732986s
+
+ Performance counter stats for './obj/traverse ./bfile_24_64.dat 64 ./qfile_24.dat 8':
+
+ 1,707,450,952,041      cache-references                                                        (56.25%)
+ 1,478,823,851,060      cache-misses                     #   86.61% of all cache refs           (56.25%)
+ 9,617,965,770,714      cpu_atom/L1-dcache-loads/                                               (56.25%)
+ 9,620,247,062,650      cpu_core/L1-dcache-loads/                                               (56.25%)
+   334,579,177,212      cpu_atom/L1-dcache-load-misses/  #    3.48% of all L1-dcache accesses   (56.25%)
+   334,662,194,360      cpu_core/L1-dcache-load-misses/  #    3.48% of all L1-dcache accesses   (50.00%)
+   334,761,692,454      cpu_core/L2_rqsts.all_demand_data_rd/                                        (25.00%)
+ 1,981,691,030,929      cpu_core/L2_rqsts.miss/                                                 (25.00%)
+   240,699,670,070      cpu_atom/LLC-loads/                                                     (25.00%)
+   240,584,627,116      cpu_core/LLC-loads/                                                     (25.00%)
+   185,640,907,017      cpu_atom/LLC-load-misses/        #   77.13% of all LL-cache accesses    (25.00%)
+   185,552,050,823      cpu_core/LLC-load-misses/        #   77.13% of all LL-cache accesses    (25.00%)
+55,653,401,388,960      instructions                     #    0.60  insn per cycle              (31.25%)
+93,490,596,257,241      cycles                                                                  (37.50%)
+ 5,020,503,705,557      branch-instructions                                                     (43.75%)
+    19,284,661,934      branch-misses                    #    0.38% of all branches             (50.00%)
+
+    2594.268854584 seconds time elapsed
+
+   19795.562870000 seconds user
+       2.818918000 seconds sys
+
+
+=======================================
+ End time: 2025-02-27 13:25:27
+ Perf results saved in perf_result_1.txt
+=======================================
